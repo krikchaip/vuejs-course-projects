@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#app {
+  font-family: Roboto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.healthbar-container {
+  display: flex;
+  justify-content: space-around;
+  width: 75vw;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.healthbar-box {
+  width: 30vw;
+}
+
+.healthbar-title {
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.healthbar {
+  height: 30px;
+  background-color: #F0F0F0;
+}
+
+.remains {
+  height: inherit;
+  background-color: limegreen;
+  text-align: center;
+  color: white;
+  font-weight: 300;
+  font-size: 0.8rem;
+}
+
+.commands-container {
+  width: 75vw;
+}
