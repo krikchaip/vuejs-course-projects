@@ -3,7 +3,7 @@
 <head>
   <title>The Monster Slayer</title>
   <script src="https://unpkg.com/vue/dist/vue.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/ramda/0.25.0/ramda.min.js"></script>
+  <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/ramda/0.25.0/ramda.min.js"></script> -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,26 +13,50 @@
       <div class="healthbar-box">
         <div class="healthbar-title">you</div>
         <div class="healthbar">
-          <div class="remains">100</div>
+          <div
+            class="remains"
+            :style="{ width: `${player.hp}%` }">
+            {{ player.hp }}
+          </div>
         </div>
       </div>
       <div class="healthbar-box">
         <div class="healthbar-title">monster</div>
         <div class="healthbar">
-          <div class="remains">100</div>
+          <div
+            class="remains"
+            :style="{ width: `${monster.hp}%` }">
+            {{ monster.hp }}
+          </div>
         </div>
       </div>
     </div>
     <div class="fab-box commands-container">
-      <button class="commands-btn commands-btn-start">start new game</button>
-      <!-- <button class="commands-btn commands-btn-attack">attack</button>
-      <button class="commands-btn commands-btn-spec">special attack</button>
-      <button class="commands-btn commands-btn-heal">heal</button>
-      <button class="commands-btn commands-btn-giveup">give up</button> -->
+      <template v-if="isStarted">
+        <button
+          v-for="(btn, idx) of buttons"
+          :key="idx"
+          :class="['commands-btn', `commands-btn-${btn.name}`]"
+          @click="btn.action">
+          {{ btn.text }}
+        </button>
+      </template>
+      <button
+        v-else
+        class="commands-btn commands-btn-start"
+        @click="startGame">
+        start new game
+      </button>
     </div>
-    <div class="fab-box logs-container">
-      <div class="logs-message logs-message-player">player hits monster for 10</div>
-      <div class="logs-message logs-message-monster">monster hits player for 5</div>
+    <div
+      v-show="logs.length"
+      class="fab-box logs-container">
+      <div
+        v-for="(log, idx) of logs"
+        :key="idx"
+        :class="['logs-message', log.class]">
+        {{ log.msg }}
+      </div>
     </div>
   </div>
 
