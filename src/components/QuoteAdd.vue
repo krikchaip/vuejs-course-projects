@@ -6,13 +6,14 @@
         <textarea
           class="form-control mb-2"
           rows="3"
+          ref="quoteTextBox"
           style="resize: none">
         </textarea>
         <div class="form-row justify-content-center">
           <button
             type="button"
             class="btn btn-primary btn-sm"
-            @click.prevent="() => {}">
+            @click.prevent="sendQuoteData">
             Add Quote
           </button>
         </div>
@@ -20,3 +21,15 @@
     </form>
   </div>
 </template>
+
+<script>
+  export default {
+    methods: {
+      sendQuoteData() {
+        let textarea = this.$refs.quoteTextBox
+        this.$emit('new-quote', textarea.value)
+        textarea.value = null
+      }
+    }
+  }
+</script>

@@ -7,8 +7,8 @@
         aria-valuemin="0"
         class="progress-bar"
         role="progressbar"
-        style="width: 100%">
-        10 / 10
+        :style="{ width: `${current / max * 100}%` }">
+        {{ current }} / {{ max }}
       </div>
     </div>
   </div>
@@ -16,5 +16,6 @@
 
 <script>
   export default {
+    props: ['current', 'max']
   }
 </script>
