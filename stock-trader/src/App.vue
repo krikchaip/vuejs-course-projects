@@ -1,5 +1,40 @@
 <template>
-  <div class="container">
-    Test
+  <div class="container navbar-expand mt-4">
+    <nav class="navbar navbar-light bg-light">
+      <a class="navbar-brand" href="#">Stock Trader</a>
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Portfolio</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Stocks</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="#">End Day</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#">
+            Save & Load
+          </a>
+          <div class="dropdown-menu show">
+            <a class="dropdown-item" href="#">Save Data</a>
+            <a class="dropdown-item" href="#">Load Data</a>
+          </div>
+        </li>
+        <li class="nav-item navbar-text">
+          <strong>Funds: ${{ (10000).toLocaleString() }}</strong>
+        </li>
+      </ul>
+    </nav>
   </div>
 </template>
+
+<style scoped>
+  .nav-item, .dropdown-item {
+    font-size: 0.9rem;
+  }
+</style>
