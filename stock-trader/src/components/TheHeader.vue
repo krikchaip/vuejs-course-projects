@@ -1,27 +1,28 @@
 <template>
   <nav class="navbar navbar-light bg-light">
-    <a class="navbar-brand" href="#">Stock Trader</a>
+    <a class="navbar-brand" draggable="false" href="#">Stock Trader</a>
     <ul class="navbar-nav">
       <li class="nav-item active">
-        <a class="nav-link" href="#">Portfolio</a>
+        <a class="nav-link" draggable="false" href="#">Portfolio</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Stocks</a>
+        <a class="nav-link" draggable="false" href="#">Stocks</a>
       </li>
     </ul>
     <ul class="navbar-nav ml-auto">
       <li class="nav-item">
-        <a class="nav-link" href="#">End Day</a>
+        <a class="nav-link" draggable="false" href="#">End Day</a>
       </li>
       <li class="nav-item dropdown">
         <a
           class="nav-link dropdown-toggle"
+          draggable="false"
           href="#">
           Save & Load
         </a>
         <div class="dropdown-menu show">
-          <a class="dropdown-item" href="#">Save Data</a>
-          <a class="dropdown-item" href="#">Load Data</a>
+          <a class="dropdown-item" draggable="false" href="#">Save Data</a>
+          <a class="dropdown-item" draggable="false" href="#">Load Data</a>
         </div>
       </li>
       <li class="nav-item navbar-text">
