@@ -1,16 +1,31 @@
 <template>
   <nav class="navbar navbar-expand-md navbar-light bg-light">
-    <a class="navbar-brand" draggable="false" href="#">Stock Trader</a>
+    <router-link
+      class="brand-button navbar-brand"
+      draggable="false"
+      to="/">
+      Stock Trader
+    </router-link>
     <button class="navbar-toggler">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse show">
       <ul class="navbar-nav">
         <li class="nav-item active">
-          <a class="nav-link" draggable="false" href="#">Portfolio</a>
+          <router-link
+            class="portfolio-button nav-link"
+            draggable="false"
+            to="/portfolio">
+            Portfolio
+          </router-link>
         </li>
         <li class="nav-item">
-          <a class="nav-link" draggable="false" href="#">Stocks</a>
+          <router-link
+            class="stocks-button nav-link"
+            draggable="false"
+            to="/stocks">
+            Stocks
+          </router-link>
         </li>
       </ul>
       <ul class="navbar-nav ml-auto">
