@@ -41,6 +41,11 @@ describe('Portfolio button', () => {
     brandButton.trigger('click')
     expect(wrapper.vm.$route.path).toBe('/portfolio')
   })
+
+  it('uses "active" css class when active', () => {
+    wrapper.vm.$router.push('/portfolio');
+    expect(brandButton.props().activeClass).toBe('active')
+  })
 })
 
 describe('Stocks button', () => {
@@ -58,5 +63,10 @@ describe('Stocks button', () => {
   it('navigates $routes to "/stocks" when clicked', () => {
     brandButton.trigger('click')
     expect(wrapper.vm.$route.path).toBe('/stocks')
+  })
+
+  it('uses "active" css class when active', () => {
+    wrapper.vm.$router.push('/stocks');
+    expect(brandButton.props().activeClass).toBe('active')
   })
 })

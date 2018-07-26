@@ -11,10 +11,11 @@
     </button>
     <div class="collapse navbar-collapse show">
       <ul class="navbar-nav">
-        <li class="nav-item active">
+        <li class="nav-item">
           <router-link
             class="portfolio-button nav-link"
             draggable="false"
+            active-class="active"
             to="/portfolio">
             Portfolio
           </router-link>
@@ -23,6 +24,7 @@
           <router-link
             class="stocks-button nav-link"
             draggable="false"
+            active-class="active"
             to="/stocks">
             Stocks
           </router-link>
