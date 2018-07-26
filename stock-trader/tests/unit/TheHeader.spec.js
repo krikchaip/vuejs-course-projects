@@ -70,3 +70,19 @@ describe('Stocks button', () => {
     expect(brandButton.props().activeClass).toBe('active')
   })
 })
+
+describe('Save & Load button', () => {
+  it('toggles dropdown menu when clicked', () => {
+    const wrapper = shallowMount(TheHeader, {
+      stubs: ['router-link']
+    })
+    const saveLoad = wrapper.find('.dropdown')
+    const dropdownMenu = saveLoad.find('.dropdown-menu')
+
+    saveLoad.trigger('click')
+    expect(dropdownMenu.classes()).toContain('show')
+
+    saveLoad.trigger('click')
+    expect(dropdownMenu.classes()).not.toContain('show')
+  })
+})

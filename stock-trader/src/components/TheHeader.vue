@@ -34,14 +34,14 @@
         <li class="nav-item">
           <a class="nav-link" draggable="false" href="#">End Day</a>
         </li>
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown" @click="show = !show">
           <a
             class="nav-link dropdown-toggle"
             draggable="false"
             href="#">
             Save & Load
           </a>
-          <div class="dropdown-menu show">
+          <div class="dropdown-menu" :class="{ show }">
             <a class="dropdown-item" draggable="false" href="#">Save Data</a>
             <a class="dropdown-item" draggable="false" href="#">Load Data</a>
           </div>
@@ -53,6 +53,16 @@
     </div>
   </nav>
 </template>
+
+<script>
+  export default {
+    name: 'TheHeader',
+    data: () => ({
+      show: false
+    })
+  }
+</script>
+
 
 <style scoped>
   .nav-item, .dropdown-item {
