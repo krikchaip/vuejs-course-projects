@@ -1,10 +1,12 @@
 <template>
   <div class="col-12 col-md-6 col-lg-4 px-2 pb-3">
     <div class="card">
-      <div class="card-header bg-success text-white">
+      <header
+        class="card-header bg-success text-white"
+        :class="headerClass">
         BMW
-        <small>[ Price: 100 ]</small>
-      </div>
+        <small data-v-section="price">[ Price: {{ price }} ]</small>
+      </header>
       <div class="card-body">
         <div class="form-row">
           <input
@@ -12,9 +14,20 @@
             type="number"
             placeholder="Quantity"
           />
-          <button class="btn btn-sm btn-success">Buy</button>
+          <button
+            class="btn btn-sm"
+            :class="actionClass"
+            @click="action($event)">
+          </button>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<script>
+  export default {
+    name: 'Stock',
+    props: ['price', 'headerClass', 'actionClass', 'action']
+  }
+</script>
