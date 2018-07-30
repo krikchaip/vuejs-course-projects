@@ -20,6 +20,7 @@
       </router-link>
     </div>
     <div class="navbar-nav">
+      <slot></slot>
       <strong class="nav-item navbar-text">
         Funds: ${{ funds.toLocaleString() }}
       </strong>

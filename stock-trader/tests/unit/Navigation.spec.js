@@ -49,3 +49,15 @@ describe('Funds', () => {
     expect(wrapper.html()).toMatchSnapshot()
   })
 })
+
+describe('Actions', () => {
+  it('uses default slot', () => {
+    const Action = { name: 'Action', template: `<div/>` }
+    const wrapper = shallowMount(Navigation, {
+      stubs: ['router-link'],
+      slots: { default: Action }
+    })
+
+    expect(wrapper.find(Action).exists()).toBeTruthy()
+  })
+})
