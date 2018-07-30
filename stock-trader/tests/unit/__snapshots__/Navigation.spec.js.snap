@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Funds displays correctly 1`] = `
+<nav class="navbar navbar-expand navbar-light bg-light shadow-sm">
+  <router-link-stub to="/" class="navbar-brand">
+    Stock Trader
+  </router-link-stub>
+  <div class="navbar-nav mr-auto">
+    <router-link-stub active-class="active" to="/portfolio" class="nav-item nav-link">
+      Portfolio
+    </router-link-stub>
+    <router-link-stub active-class="active" to="/stocks" class="nav-item nav-link">
+      Stocks
+    </router-link-stub>
+  </div>
+  <div class="navbar-nav"><strong class="nav-item navbar-text">
+      Funds: $10,000
+    </strong></div>
+</nav>
+`;

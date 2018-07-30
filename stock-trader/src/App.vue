@@ -1,6 +1,7 @@
 <template>
   <div class="container">
-    <Navigation></Navigation>
+    <Navigation class="my-3">
+    </Navigation>
     <router-view></router-view>
   </div>
 </template>
