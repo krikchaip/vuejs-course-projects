@@ -1,31 +1,24 @@
-import { mount, createLocalVue } from '@vue/test-utils'
-import VueRouter from 'vue-router'
 import router from '@/router'
 
-const localVue = createLocalVue()
-const RouterView = { template: `<router-view/>` }
-
-localVue.use(VueRouter)
-
-describe('RouterView', () => {
-  let wrapper
-
-  beforeEach(() => {
-    wrapper = mount(RouterView, { localVue, router })
+describe('Component Matching', () => {
+  it('Home component at "/"', () => {
+    const Home =
+      router.getMatchedComponents('/')
+      .filter(comp => comp.name === 'Home')
+    expect(Home.length).toBe(1)
   })
 
-  it('renders Home component at "/"', () => {
-    wrapper.vm.$router.push('/')
-    expect(wrapper.find({ name: 'Home' }).exists()).toBeTruthy()
+  it('Portfolio component at "/portfolio"', () => {
+    const Portfolio =
+      router.getMatchedComponents('/portfolio')
+      .filter(comp => comp.name === 'Portfolio')
+    expect(Portfolio.length).toBe(1)
   })
 
-  it('renders Portfolio component at "/portfolio"', () => {
-    wrapper.vm.$router.push('/portfolio')
-    expect(wrapper.find({ name: 'Portfolio' }).exists()).toBeTruthy()
-  })
-
-  it('renders Stocks component at "/stocks"', () => {
-    wrapper.vm.$router.push('/stocks')
-    expect(wrapper.find({ name: 'Stocks' }).exists()).toBeTruthy()
+  it('Stocks component at "/stocks"', () => {
+    const Stocks =
+      router.getMatchedComponents('/stocks')
+      .filter(comp => comp.name === 'Stocks')
+    expect(Stocks.length).toBe(1)
   })
 })
