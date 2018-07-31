@@ -51,7 +51,7 @@ describe('Funds', () => {
 })
 
 describe('Actions', () => {
-  it('uses default slot', () => {
+  it('uses default slot to display', () => {
     const Action = { name: 'Action', template: `<div/>` }
     const wrapper = shallowMount(Navigation, {
       stubs: ['router-link'],
