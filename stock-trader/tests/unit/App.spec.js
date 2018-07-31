@@ -21,21 +21,17 @@ describe('User Interface', () => {
   })
 })
 
-describe('Actions', () => {
+describe('slots -> Navigation', () => {
   const wrapper = shallowMount(App, { stubs: ['RouterView'] })
   const Navigation = wrapper.find({ name: 'Navigation' })
 
-  describe('End Day', () => {
-    it('passes to Navigation as a slot', () => {
-      const ActionEndDay = Navigation.find({ name: 'ActionEndDay' })
-      expect(ActionEndDay.exists()).toBeTruthy()
-    })
+  it('(default) End Day', () => {
+    const ActionEndDay = Navigation.find({ name: 'ActionEndDay' })
+    expect(ActionEndDay.exists()).toBeTruthy()
   })
 
-  describe('Save & Load', () => {
-    it('passes to Navigation as a slot', () => {
-      const ActionSaveLoad = Navigation.find({ name: 'ActionSaveLoad' })
-      expect(ActionSaveLoad.exists()).toBeTruthy()
-    })
+  it('(default) Save & Load', () => {
+    const ActionSaveLoad = Navigation.find({ name: 'ActionSaveLoad' })
+    expect(ActionSaveLoad.exists()).toBeTruthy()
   })
 })

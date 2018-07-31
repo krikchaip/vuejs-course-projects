@@ -22,11 +22,8 @@
 
 <style>
   @import '~@/assets/bootstrap.min.css';
-</style>
 
-<style scoped>
-  .nav-item {
-    cursor: pointer;
+  * {
     user-select: none;
   }
 </style>
