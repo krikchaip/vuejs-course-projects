@@ -22,19 +22,11 @@
     <div class="navbar-nav">
       <slot></slot>
       <strong class="nav-item navbar-text">
-        Funds: ${{ funds.toLocaleString() }}
+        Funds: ${{ $store.getters.funds }}
       </strong>
     </div>
   </nav>
 </template>
-
-<script>
-  export default {
-    props: {
-      funds: { type: Number, default: 0 }
-    }
-  }
-</script>
 
 <style scoped>
   .nav-item {

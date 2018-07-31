@@ -1,11 +1,25 @@
 import { shallowMount, RouterLinkStub } from '@vue/test-utils'
 import Navigation from '@/components/Navigation'
 
-describe('RouterLink', () => {
-  const wrapper = shallowMount(Navigation, {
-    stubs: { RouterLink: RouterLinkStub }
+let wrapper
+
+beforeEach(() => {
+  const Action = { name: 'Action', template: `<div/>` }
+  const $store = { getters: { funds: '100,000' } }
+
+  wrapper = shallowMount(Navigation, {
+    stubs: { RouterLink: RouterLinkStub },
+    slots: { default: Action },
+    mocks: { $store }
   })
-  const links = wrapper.findAll(RouterLinkStub)
+})
+
+describe('RouterLink', () => {
+  let links
+
+  beforeEach(() => {
+    links = wrapper.findAll(RouterLinkStub)
+  })
 
   it('has only one link to "/"', () => {
     const toRoot = links.filter(w => w.props().to === '/')
@@ -26,38 +40,16 @@ describe('RouterLink', () => {
 })
 
 describe('Funds', () => {
-  let wrapper
+  it('display "funds" from vuex getter', () => {
+    expect(wrapper.find('strong').text()).toBe('Funds: $100,000')
 
-  beforeEach(() => {
-    wrapper = shallowMount(Navigation, {
-      stubs: ['router-link']
-    })
-  })
-
-  it('recieves via "funds" prop', () => {
-    wrapper.setProps({ funds: 100 })
-    expect(wrapper.props().funds).toBe(100)
-  })
-
-  it('should be a number, default is 0', () => {
-    const spec = { type: Number, default: 0 }
-    expect(wrapper.vm.$options.props.funds).toEqual(spec)
-  })
-
-  it('displays correctly', () => {
-    wrapper.setProps({ funds: 10000 })
-    expect(wrapper.html()).toMatchSnapshot()
+    wrapper.vm.$store.getters.funds = '99,999'
+    expect(wrapper.find('strong').text()).toBe('Funds: $99,999')
   })
 })
 
 describe('Actions', () => {
   it('uses default slot to display', () => {
-    const Action = { name: 'Action', template: `<div/>` }
-    const wrapper = shallowMount(Navigation, {
-      stubs: ['router-link'],
-      slots: { default: Action }
-    })
-
-    expect(wrapper.find(Action).exists()).toBeTruthy()
+    expect(wrapper.find({ name: 'Action' }).exists()).toBeTruthy()
   })
 })
