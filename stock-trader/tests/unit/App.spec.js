@@ -1,6 +1,7 @@
 import { shallowMount } from '@vue/test-utils'
 import App from '@/App'
 
+// TODO: do snapshot test instead
 describe('User Interface', () => {
   let wrapper
 
@@ -21,6 +22,7 @@ describe('User Interface', () => {
   })
 })
 
+// * NOT BAD - try refactor tests messages to be more human-friendly
 describe('Navigation', () => {
   let wrapper, Navigation
 

@@ -1,6 +1,7 @@
 import { shallowMount } from '@vue/test-utils'
 import Home from '@/views/Home'
 
+// * NOT BAD - what happen when you don't put funds in <strong> tag?
 it('display funds from vuex getter', () => {
   const getters = { funds: '100,000' }
   const wrapper = shallowMount(Home, {

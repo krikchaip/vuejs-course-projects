@@ -1,5 +1,6 @@
 import router from '@/router'
 
+// * GOOD - but too context specific
 describe('Component Matching', () => {
   it('Home component at "/"', () => {
     const Home =

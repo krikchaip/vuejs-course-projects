@@ -8,6 +8,7 @@ describe('Bootstrap4 specific', () => {
     wrapper = shallowMount(ActionSaveLoad)
   })
 
+  // TODO: do snapshot test instead
   it('should be a dropdown', () => {
     const toggler = wrapper.find('.dropdown-toggle')
     const menu = wrapper.find('.dropdown-menu')
@@ -17,6 +18,7 @@ describe('Bootstrap4 specific', () => {
     expect(menu.exists()).toBeTruthy()
   })
 
+  // TODO: do snapshot test instead (just don't care that css class)
   it('toggles visibility using "show" class when clicked', () => {
     const menu = wrapper.find('.dropdown-menu')
 

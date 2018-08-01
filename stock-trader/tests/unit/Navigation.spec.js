@@ -3,6 +3,7 @@ import Navigation from '@/components/Navigation'
 
 let wrapper
 
+// ! you put everything in one place
 beforeEach(() => {
   const Action = { name: 'Action', template: `<div/>` }
   const $store = { getters: { funds: '100,000' } }
@@ -14,6 +15,7 @@ beforeEach(() => {
   })
 })
 
+// TODO: cut the "has only" part and try incorperate with snapshot test?
 describe('RouterLink', () => {
   let links
 
@@ -39,6 +41,7 @@ describe('RouterLink', () => {
   })
 })
 
+// * NOT BAD - what if I don't like <strong> tag?
 describe('Funds', () => {
   it('display "funds" from vuex getter', () => {
     expect(wrapper.find('strong').text()).toBe('Funds: $100,000')
@@ -48,6 +51,7 @@ describe('Funds', () => {
   })
 })
 
+// * NOT BAD - maybe should try snapshot?
 describe('Actions', () => {
   it('uses default slot to display', () => {
     expect(wrapper.find({ name: 'Action' }).exists()).toBeTruthy()
