@@ -9,6 +9,7 @@ afterEach(() => {
 })
 
 describe('State', () => {
+  // * GOOD - just remove existence checking
   it('contains "funds" with 10000 as default', () => {
     expect(store.state.funds).toBeDefined()
     expect(store.state.funds).toBe(stateSpec.funds)
@@ -17,6 +18,7 @@ describe('State', () => {
 
 describe('Getters', () => {
   describe('funds', () => {
+    // * GOOD - but you don't have to retest the real expected result
     it('should throw an error when state.funds is not a Number', () => {
       expect(() => {
         store.replaceState({ funds: '13esa' })
@@ -28,6 +30,7 @@ describe('Getters', () => {
       }).not.toThrow()
     })
 
+    // * GOOD
     it('should return 3 digits thousands separator string', () => {
       store.replaceState({ funds: 1000 })
       expect(store.getters.funds).toBe('1,000')
