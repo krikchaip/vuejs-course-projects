@@ -5,7 +5,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    funds: 10000
+    funds: 10000,
+    port: []
   },
   getters: {
     funds: ({ funds }) => {
@@ -16,5 +17,18 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    WITHDRAW_FUNDS: (state, amount) => {
+      state.funds -= amount
+    },
+    ADD_STOCK: (state, stock) => {
+      const existing =  state.port.map(s => s.name)
+      const toAddMore = state.port.findIndex(s => s.name === stock.name)
+
+      if(existing.includes(stock.name)) {
+        state.port[toAddMore].quantity += stock.quantity
+      } else {
+        state.port.push(stock)
+      }
+    }
   }
 })

@@ -5,6 +5,8 @@ exports[`Props displays name and price correctly 1`] = `"BMW  [ Price: 110 ]"`;
 exports[`Stock Body should match snapshot 1`] = `
 <div class="card-body form-row">
   <input placeholder="Quantity" type="number" min="1" class="form-control form-control-sm col-5 mr-auto">
-  <button class="btn btn-outline-success">Buy</button>
+  <button disabled="disabled" class="btn btn-outline-success">
+    Buy
+  </button>
 </div>
 `;
