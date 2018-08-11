@@ -1,25 +1,26 @@
 import router from '@/router'
 
-// * GOOD - but too context specific
-describe('Component Matching', () => {
-  it('Home component at "/"', () => {
-    const Home =
-      router.getMatchedComponents('/')
-      .filter(comp => comp.name === 'Home')
-    expect(Home.length).toBe(1)
-  })
+/**
+ * These tests should better be done integrated (w/ App) instead.
+ */
 
-  it('Portfolio component at "/portfolio"', () => {
-    const Portfolio =
-      router.getMatchedComponents('/portfolio')
-      .filter(comp => comp.name === 'Portfolio')
-    expect(Portfolio.length).toBe(1)
-  })
+it('should contain Home component at root', () => {
+  const atRoot = router.getMatchedComponents('/')
+  expect(atRoot).toContainEqual(
+    expect.objectContaining({ name: 'Home' })
+  )
+})
 
-  it('Stocks component at "/stocks"', () => {
-    const Stocks =
-      router.getMatchedComponents('/stocks')
-      .filter(comp => comp.name === 'Stocks')
-    expect(Stocks.length).toBe(1)
-  })
+it('should contain Portfolio component at /portfolio', () => {
+  const atPortfolio = router.getMatchedComponents('/portfolio')
+  expect(atPortfolio).toContainEqual(
+    expect.objectContaining({ name: 'Portfolio' })
+  )
+})
+
+it('should contain Stocks component at /stocks', () => {
+  const atStocks = router.getMatchedComponents('/stocks')
+  expect(atStocks).toContainEqual(
+    expect.objectContaining({ name: 'Stocks' })
+  )
 })
