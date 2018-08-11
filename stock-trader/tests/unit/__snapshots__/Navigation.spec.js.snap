@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`funds getter is set should display correct funds 1`] = `
+<strong class="nav-item navbar-text">
+      Funds: $100,000
+    </strong>
+`;
+
+exports[`funds getter is set should display correct funds 2`] = `
+<strong class="nav-item navbar-text">
+      Funds: $9,000
+    </strong>
+`;
+
+exports[`passing slot should render default slot at the right place 1`] = `
+<nav class="navbar navbar-expand navbar-light bg-light shadow-sm">
+  <a class="navbar-brand">
+    Stock Trader
+  </a>
+  <div class="navbar-nav mr-auto">
+    <a class="nav-item nav-link">
+      Portfolio
+    </a>
+    <a class="nav-item nav-link">
+      Stocks
+    </a>
+  </div>
+  <div class="navbar-nav">
+    <div>test-slot</div> <strong class="nav-item navbar-text">
+      Funds: $
+    </strong></div>
+</nav>
+`;

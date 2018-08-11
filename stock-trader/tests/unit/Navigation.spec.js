@@ -1,59 +1,66 @@
 import { shallowMount, RouterLinkStub } from '@vue/test-utils'
 import Navigation from '@/components/Navigation'
 
-let wrapper
+/**
+* These tests should better be done integrated (w/ App) instead.
+*/
 
-// ! you put everything in one place
-beforeEach(() => {
-  const Action = { name: 'Action', template: `<div/>` }
-  const $store = { getters: { funds: '100,000' } }
-
-  wrapper = shallowMount(Navigation, {
+function createWrapper(options) {
+  return shallowMount(Navigation, {
     stubs: { RouterLink: RouterLinkStub },
-    slots: { default: Action },
-    mocks: { $store }
+    mocks: { $store: { getters: {} } },
+    ...options
+  })
+}
+
+describe('has a link', () => {
+  const links = createWrapper()
+    .findAll(RouterLinkStub).wrappers
+    .map(w => w.props())
+
+  it('to root', () => {
+    expect(links).toContainEqual(
+      expect.objectContaining({ to: '/' })
+    )
+  })
+
+  it('to /portfolio', () => {
+    expect(links).toContainEqual(
+      expect.objectContaining({ to: '/portfolio' })
+    )
+  })
+
+  it('to /stocks', () => {
+    expect(links).toContainEqual(
+      expect.objectContaining({ to: '/stocks' })
+    )
   })
 })
 
-// TODO: cut the "has only" part and try incorperate with snapshot test?
-describe('RouterLink', () => {
-  let links
+describe('funds getter is set', () => {
+  const $store = {
+    getters: { funds: '100,000' }
+  }
 
-  beforeEach(() => {
-    links = wrapper.findAll(RouterLinkStub)
-  })
+  it('should display correct funds', () => {
+    const wrapper = createWrapper({ mocks: { $store } })
+    const fundsTexts = wrapper.find('strong')
 
-  it('has only one link to "/"', () => {
-    const toRoot = links.filter(w => w.props().to === '/')
-    expect(toRoot.length).toBe(1)
-  })
+    expect(fundsTexts.html()).toMatchSnapshot()
 
-  it('has only one link to "/portfolio with custom active class"', () => {
-    const toPortfolio = links.filter(w => w.props().to === '/portfolio')
-    expect(toPortfolio.length).toBe(1)
-    expect(toPortfolio.at(0).props().activeClass).toBeTruthy()
-  })
-
-  it('has only one link to "/stocks with custom active class"', () => {
-    const toStocks = links.filter(w => w.props().to === '/stocks')
-    expect(toStocks.length).toBe(1)
-    expect(toStocks.at(0).props().activeClass).toBeTruthy()
+    wrapper.vm.$store.getters.funds = '9,000'
+    expect(fundsTexts.html()).toMatchSnapshot()
   })
 })
 
-// * NOT BAD - what if I don't like <strong> tag?
-describe('Funds', () => {
-  it('display "funds" from vuex getter', () => {
-    expect(wrapper.find('strong').text()).toBe('Funds: $100,000')
+describe('passing slot', () => {
+  const TestSlotComponent = {
+    name: 'TestSlotComponent',
+    template: `<div>test-slot</div>`
+  }
 
-    wrapper.vm.$store.getters.funds = '99,999'
-    expect(wrapper.find('strong').text()).toBe('Funds: $99,999')
-  })
-})
-
-// * NOT BAD - maybe should try snapshot?
-describe('Actions', () => {
-  it('uses default slot to display', () => {
-    expect(wrapper.find({ name: 'Action' }).exists()).toBeTruthy()
+  it('should render default slot at the right place', () => {
+    const wrapper = createWrapper({ slots: { default: TestSlotComponent } })
+    expect(wrapper.html()).toMatchSnapshot()
   })
 })
