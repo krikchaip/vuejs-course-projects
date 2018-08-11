@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`menu is initially hidden should toggle menu visibility when clicked 1`] = `
+<div class="nav-item dropdown" style="cursor: pointer;"><span class="nav-link dropdown-toggle">Save &amp; Load</span>
+  <div class="dropdown-menu show">
+    <div class="dropdown-item">Save Data</div>
+    <div class="dropdown-item">Load Data</div>
+  </div>
+</div>
+`;
+
+exports[`menu is initially hidden should toggle menu visibility when clicked 2`] = `
+<div class="nav-item dropdown" style="cursor: pointer;"><span class="nav-link dropdown-toggle">Save &amp; Load</span>
+  <div class="dropdown-menu">
+    <div class="dropdown-item">Save Data</div>
+    <div class="dropdown-item">Load Data</div>
+  </div>
+</div>
+`;

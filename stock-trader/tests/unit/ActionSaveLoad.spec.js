@@ -1,31 +1,18 @@
 import { shallowMount } from '@vue/test-utils'
 import ActionSaveLoad from '@/components/ActionSaveLoad'
 
-describe('Bootstrap4 specific', () => {
-  let wrapper
+describe('menu is initially hidden', () => {
+  const data = () => ({ menuShow: false })
 
-  beforeEach(() => {
-    wrapper = shallowMount(ActionSaveLoad)
-  })
-
-  // TODO: do snapshot test instead
-  it('should be a dropdown', () => {
-    const toggler = wrapper.find('.dropdown-toggle')
-    const menu = wrapper.find('.dropdown-menu')
-
-    expect(wrapper.classes()).toContain('dropdown')
-    expect(toggler.exists()).toBeTruthy()
-    expect(menu.exists()).toBeTruthy()
-  })
-
-  // TODO: do snapshot test instead (just don't care that css class)
-  it('toggles visibility using "show" class when clicked', () => {
-    const menu = wrapper.find('.dropdown-menu')
+  it('should toggle menu visibility when clicked', () => {
+    const wrapper = shallowMount(ActionSaveLoad, { data })
 
     wrapper.trigger('click')
-    expect(menu.classes()).toContain('show')
+    expect(wrapper.vm.menuShow).toBeTruthy()
+    expect(wrapper.html()).toMatchSnapshot()
 
     wrapper.trigger('click')
-    expect(menu.classes()).not.toContain('show')
+    expect(wrapper.vm.menuShow).toBeFalsy()
+    expect(wrapper.html()).toMatchSnapshot()
   })
 })

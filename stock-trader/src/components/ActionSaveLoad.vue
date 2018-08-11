@@ -2,9 +2,9 @@
   <div
     class="nav-item dropdown"
     style="cursor: pointer"
-    @click="show = !show">
+    @click="menuShow = !menuShow">
     <span class="nav-link dropdown-toggle">Save & Load</span>
-    <div :class="['dropdown-menu', { show }]">
+    <div :class="['dropdown-menu', { show: menuShow }]">
       <div class="dropdown-item">Save Data</div>
       <div class="dropdown-item">Load Data</div>
     </div>
@@ -14,7 +14,7 @@
 <script>
   export default {
     data: () => ({
-      show: false
+      menuShow: false
     })
   }
 </script>
