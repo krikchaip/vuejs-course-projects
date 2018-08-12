@@ -2,196 +2,166 @@ import { shallowMount, createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
 import Stock from '@/components/Stock'
 
-describe('Props', () => {
-  let wrapper
+const localVue = createLocalVue()
+localVue.use(Vuex)
 
-  beforeEach(() => {
-    wrapper = createWrapperWithVuex()
+function createWrapper(options = {}) {
+  return shallowMount(Stock, {
+    localVue,
+    store: new Vuex.Store({
+      state    : options.state     || {},
+      getters  : options.getters   || {},
+      mutations: options.mutations || {},
+      actions  : options.actions   || {}
+    }),
+    ...options
   })
+}
 
-  // ! pushing too hard. End up relying on implementation detail
-  it('name as a String', () => {
-    const { name: nameOptions } = wrapper.vm.$options.props
-    expect(nameOptions.type).toBe(String)
-  })
+describe('given stock data containing name and price.', () => {
+  const stockData = {
+    name: 'JWX',
+    price: 15
+  }
 
-  // ! pushing too hard. End up relying on implementation detail
-  it('price as a Number', () => {
-    const { price: priceOptions } = wrapper.vm.$options.props
-    expect(priceOptions.type).toBe(Number)
-  })
+  it('should display them on the top when passing as prop', () => {
+    const wrapper = createWrapper({ propsData: stockData })
+    const top = wrapper.find('.card-header')
 
-  // * NOT BAD - but what if I don't use .card-header?
-  it('displays name and price correctly', () => {
-    wrapper.setProps({ name: 'BMW', price: 110 })
-    expect(wrapper.find('.card-header').text()).toMatchSnapshot()
-  })
-})
-
-// * NOT BAD - but relying on .card-body bootstrap4 class
-describe('Stock Body', () => {
-  it('should contain input number and buy button', () => {
-    const Body = createWrapperWithVuex().find('.card-body')
-    const Quantity = Body.find('input[type="number"]')
-    const BuyButton = Body.find('button')
-
-    expect(Quantity.exists()).toBeTruthy()
-    expect(BuyButton.exists()).toBeTruthy()
-  })
-
-  it('should match snapshot', () => {
-    const Body = createWrapperWithVuex().find('.card-body')
-    expect(Body.html()).toMatchSnapshot()
-  })
-})
-
-describe('Data', () => {
-  describe('quantity', () => {
-    it('should react when number input changes value', () => {
-      const wrapper = createWrapperWithVuex()
-      const inputNumber = wrapper.find('input[type="number"]')
-
-      inputNumber.element.value = 10
-      inputNumber.trigger('input')
-
-      expect(wrapper.vm.quantity).toBe(10)
-    })
+    expect(top.html()).toMatchSnapshot()
   })
 })
 
 describe('Buy Stock', () => {
-  it('should commit to proper mutations', () => {
-    const WITHDRAW_FUNDS = jest.fn()
-    const ADD_STOCK = jest.fn()
+  function targetWrapper(wrapper) {
+    return {
+      numberInput: wrapper.find('input[type="number"]'),
+      buyButton: wrapper.find('button')
+    }
+  }
 
-    const store = { mutations: { WITHDRAW_FUNDS, ADD_STOCK } }
-    const wrapper = createWrapperWithVuex({ store })
+  describe('purchase successful', () => {
+    const funds = 1000
+    const stockData = { name: 'BMX', price: 50 }
+    const orderQuantity = 10
 
-    const order = { name: 'FOREX', price: 100, quantity: 5 }
-    wrapper.vm.buyStock(order)
+    let wrapper, addUserStock
 
-    expect(WITHDRAW_FUNDS).toBeCalledWith(expect.anything(), 500)
-    expect(ADD_STOCK).toBeCalledWith(expect.anything(), order)
-  })
-
-  it('should reset quantity when purchase completed', () => {
-    const order = { name: 'FOREX', price: 100, quantity: 5 }
-    const wrapper = shallowMount(Stock, {
-      mocks: {
-        $store: { commit: () => {} }
-      }
-    })
-    const numberInput = wrapper.find('input[type="number"]')
-
-    wrapper.vm.buyStock(order)
-    expect(numberInput.element.value).toBeFalsy()
-  })
-
-  describe('Button', () => {
-    it('should initially be disabled', () => {
-      const wrapper = createWrapperWithVuex()
-      const button = wrapper.find('button')
-
-      expect(button.element.disabled).toBeTruthy()
-    })
-
-    it('should clickable when everything is fine', () => {
-      const store = { state: { funds: 10000 } }
-      const wrapper = createWrapperWithVuex({ store })
-      const button = wrapper.find('button')
-
-      wrapper.setProps({ name: 'WIN', price: 100 })
-      wrapper.setData({ quantity: 10 })
-      expect(button.element.disabled).toBeFalsy()
-    })
-
-    it('should call the method with order object when clicked', () => {
-      const buyStock = jest.fn()
-      const wrapper = createWrapperWithVuex({
-        store: { state: { funds: 10000 } },
-        propsData: { name: 'WIN', price: 100 },
-        data: () => ({ quantity: 1 }),
-        methods: { buyStock }
+    beforeEach(() => {
+      addUserStock = jest.fn(() => Promise.resolve())
+      wrapper = createWrapper({
+        data: () => ({ quantity: orderQuantity }),
+        propsData: stockData,
+        state: { funds },
+        actions: { 'add-user-stock': addUserStock }
       })
-      const button = wrapper.find('button')
-
-      button.trigger('click')
-      expect(buyStock).toBeCalledWith(expect.objectContaining({
-        name: 'WIN',
-        price: 100,
-        quantity: 1
-      }))
     })
 
-    it('should be disabled when not enough funds', () => {
-      const store = { state: { funds: 500 } }
-      const wrapper = createWrapperWithVuex({ store })
-      const button = wrapper.find('button')
-
-      wrapper.setProps({ name: 'VUE', price: 1000 })
-      wrapper.setData({ quantity: 1 })
-      expect(button.element.disabled).toBeTruthy()
+    it('buy button should be clickable', () => {
+      const { buyButton } = targetWrapper(wrapper)
+      expect(buyButton.element.disabled).toBeFalsy()
     })
 
-    it('should be disabled if quantity is less than 1', () => {
-      const wrapper = createWrapperWithVuex()
-      const button = wrapper.find('button')
+    it('quantity field should not warn', () => {
+      const { numberInput } = targetWrapper(wrapper)
+      expect(numberInput.classes()).not.toContain('is-invalid')
+    })
 
-      wrapper.setData({ quantity: 0 })
-      expect(button.element.disabled).toBeTruthy()
+    it('should dispatch add-user-stock with order payload', () => {
+      const order = { ...stockData, quantity: orderQuantity }
+      const { buyButton } = targetWrapper(wrapper)
 
-      wrapper.setData({ quantity: -1 })
-      expect(button.element.disabled).toBeTruthy()
+      buyButton.trigger('click')
+      expect(addUserStock.mock.calls[0]).toContainEqual(order)
+    })
+
+    it('should reset quantity field after completed', async () => {
+      const { numberInput, buyButton } = targetWrapper(wrapper)
+
+      buyButton.trigger('click')
+      await wrapper.vm.$forceUpdate()
+
+      expect(numberInput.element.value).toBeFalsy()
     })
   })
 
-  describe('Number Input', () => {
-    it('should not warn when everything is legit', () => {
-      const store = { state: { funds: 10000 } }
-      const wrapper = createWrapperWithVuex({
-        store,
-        propsData: { name: 'VUE', price: 100 },
-        data: () => ({ quantity: 5 })
+  describe('buy button disabled', () => {
+    it('given quantity field is blank', () => {
+      const wrapper = createWrapper()
+      const { numberInput, buyButton } = targetWrapper(wrapper)
+
+      numberInput.element.value = null
+      numberInput.trigger('input')
+
+      expect(buyButton.element.disabled).toBeTruthy()
+    })
+
+    it('given quantity is less than 1', () => {
+      const wrapper = createWrapper()
+      const { numberInput, buyButton } = targetWrapper(wrapper)
+
+      numberInput.element.value = 0
+      numberInput.trigger('input')
+      expect(buyButton.element.disabled).toBeTruthy()
+
+      numberInput.element.value = -1
+      numberInput.trigger('input')
+      expect(buyButton.element.disabled).toBeTruthy()
+    })
+
+    it('given not enough funds', () => {
+      const funds = 10
+      const stockData = { name: 'HAE', price: 999 }
+      const quantity = 1
+
+      const wrapper = createWrapper({
+        state: { funds },
+        propsData: stockData,
+        data: () => ({ quantity })
       })
-      const numberInput = wrapper.find('input[type="number"]')
+
+      const { buyButton } = targetWrapper(wrapper)
+      expect(buyButton.element.disabled).toBeTruthy()
+    })
+  })
+
+  describe('quantity field warning', () => {
+    it('should not warn if blank', () => {
+      const wrapper = createWrapper()
+      const { numberInput } = targetWrapper(wrapper)
+
+      numberInput.element.value = null
+      numberInput.trigger('input')
 
       expect(numberInput.classes()).not.toContain('is-invalid')
     })
 
-    it('should warn when not enough funds', () => {
-      const wrapper = createWrapperWithVuex({
-        propsData: { name: 'VUE', price: 99999 },
-        data: () => ({ quantity: 1 })
-      })
-      const numberInput = wrapper.find('input[type="number"]')
+    it('should warn if less than 1', () => {
+      const wrapper = createWrapper()
+      const { numberInput } = targetWrapper(wrapper)
 
+      numberInput.element.value = 0
+      numberInput.trigger('input')
+      expect(numberInput.classes()).toContain('is-invalid')
+
+      numberInput.element.value = -1
+      numberInput.trigger('input')
       expect(numberInput.classes()).toContain('is-invalid')
     })
 
-    it('should warn if quantity is less than 1', () => {
-      const wrapper = createWrapperWithVuex({
-        data: () => ({ quantity: 0 })
-      })
-      const numberInput = wrapper.find('input[type="number"]')
+    it('should warn if not enough funds', () => {
+      const funds = 10
+      const stockData = { name: 'HAE', price: 999 }
+      const quantity = 1
 
+      const wrapper = createWrapper({
+        state: { funds },
+        propsData: stockData,
+        data: () => ({ quantity })
+      })
+
+      const { numberInput } = targetWrapper(wrapper)
       expect(numberInput.classes()).toContain('is-invalid')
     })
   })
 })
-
-function createWrapperWithVuex(mountOptions = {
-  store: {
-    state: { funds: 0 }
-  }
-}) {
-  const localVue = createLocalVue()
-  localVue.use(Vuex)
-
-  const store = new Vuex.Store(mountOptions.store)
-
-  return shallowMount(Stock, {
-    ...mountOptions,
-    localVue,
-    store
-  })
-}

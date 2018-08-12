@@ -1,12 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Props displays name and price correctly 1`] = `"BMW  [ Price: 110 ]"`;
-
-exports[`Stock Body should match snapshot 1`] = `
-<div class="card-body form-row">
-  <input placeholder="Quantity" type="number" min="1" class="form-control form-control-sm col-5 mr-auto">
-  <button disabled="disabled" class="btn btn-outline-success">
-    Buy
-  </button>
+exports[`given stock data containing name and price. should display them on the top when passing as prop 1`] = `
+<div class="card-header py-2 text-white bg-success"><strong>JWX</strong>
+  <small> [ Price: 15 ]</small>
 </div>
 `;

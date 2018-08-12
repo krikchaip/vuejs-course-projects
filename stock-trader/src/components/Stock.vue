@@ -15,8 +15,8 @@
       />
       <button
         class="btn btn-outline-success"
-        :disabled="onConditions"
-        @click="buyStock({ name, price, quantity })">
+        :disabled="disableConditions"
+        @click="buyStock">
         Buy
       </button>
     </div>
@@ -36,34 +36,32 @@
     }),
     computed: {
       ...mapState(['funds']),
-      haveEnoughFunds() {
-        return this.quantity * this.price <= this.funds
+
+      quantityIsBlank() { return typeof this.quantity !== 'number' && !this.quantity },
+      quantityIsLessThanOne() { return this.quantity < 1 },
+      notEnoughFunds() { return this.funds < this.quantity * this.price },
+
+      disableConditions() {
+        return this.quantityIsBlank
+          || this.quantityIsLessThanOne
+          || this.notEnoughFunds
       },
-      legitQuantity() {
-        return this.quantity > 0
-      },
-      onConditions() {
-        if(this.quantity) {
-          return !this.legitQuantity
-            ? true
-            : !this.haveEnoughFunds
-        }
-        return true
-      },
+
       isInvalid() {
-        if(typeof this.quantity === 'number') {
-          return !this.legitQuantity
-            ? true
-            : !this.haveEnoughFunds
-        }
-        return false
+        return !this.quantityIsBlank
+          && this.quantityIsLessThanOne
+          || this.notEnoughFunds
       }
     },
     methods: {
-      buyStock(stockData = { name, price, quantity }) {
-        this.quantity = null
-        this.$store.commit('WITHDRAW_FUNDS', stockData.price * stockData.quantity)
-        this.$store.commit('ADD_STOCK', stockData)
+      buyStock() {
+        this.$store.dispatch('add-user-stock', {
+          name: this.name,
+          price: this.price,
+          quantity: this.quantity
+        }).then(() => {
+          this.quantity = null
+        })
       }
     }
   }
