@@ -3,27 +3,41 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-const containStock = (newEntry, stocks) =>
-  !!stocks.filter(s => s.name === newEntry.name)[0]
-
 export default new Vuex.Store({
   state: {
     funds: 10000,
     stocks: []
   },
   getters: {
-    funds: ({ funds }) => funds.toLocaleString('en-US')
+    funds: ({ funds }) => funds.toLocaleString('en-US'),
+    containStock: ({ stocks }) => name =>
+      !!stocks.filter(s => s.name === name)[0],
+    priceOf: ({ stocks }) => name =>
+      stocks.filter(s => s.name === name)[0].price,
+    stockIsEmpty: ({ stocks }) => name =>
+      stocks.filter(s => s.name === name)[0].quantity <= 0
   },
   mutations: {
     WITHDRAW_FUNDS(state, n) {
       state.funds -= n
     },
-    UPDATE_STOCK(state, data) {
+    ADD_FUNDS(state, n) {
+      state.funds += n
+    },
+    INC_QUANTITY(state, data) {
       const target = state.stocks.findIndex(s => s.name === data.name)
       state.stocks[target].quantity += data.quantity
     },
-    ADD_STOCKS(state, newStock) {
+    DEC_QUANTITY(state, data) {
+      const target = state.stocks.findIndex(s => s.name === data.name)
+      state.stocks[target].quantity -= data.quantity
+    },
+    ADD_STOCK(state, newStock) {
       state.stocks = state.stocks.concat([newStock])
+    },
+    REMOVE_STOCK(state, name) {
+      const target = state.stocks.findIndex(s => s.name === name)
+      state.stocks.splice(target, 1)
     }
   },
   actions: {
@@ -33,14 +47,22 @@ export default new Vuex.Store({
       }
       commit('WITHDRAW_FUNDS', amount)
     },
-    async 'add-user-stock'({ state, commit }, stockData) {
+    async 'add-user-stock'({ getters, commit }, stockData) {
       if(stockData.quantity < 1) {
         throw new Error('quantity should greater than 0')
       }
-      if(containStock(stockData, state.stocks)) {
-        commit('UPDATE_STOCK', stockData)
+      if(getters.containStock(stockData.name)) {
+        commit('INC_QUANTITY', stockData)
       } else {
-        commit('ADD_STOCKS', stockData)
+        commit('ADD_STOCK', stockData)
+      }
+    },
+    async 'sell-stock'({ getters, commit }, data) {
+      commit('DEC_QUANTITY', data)
+      commit('ADD_FUNDS', getters.priceOf(data.name) * data.quantity)
+
+      if(getters.stockIsEmpty(data.name)) {
+        commit('REMOVE_STOCK', data.name)
       }
     }
   }

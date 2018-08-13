@@ -4,7 +4,7 @@ function initialState() {
   return { funds: 0, stocks: [] }
 }
 
-beforeEach(() => {
+afterEach(() => {
   store.replaceState(initialState())
 })
 
@@ -79,6 +79,45 @@ describe('add-user-stock action', () => {
         store.dispatch('add-user-stock', stock)
         expect(store.state.stocks[0]).toHaveProperty('quantity', 10)
       })
+    })
+  })
+})
+
+describe('sell-stock action', () => {
+  beforeEach(() => {
+    store.replaceState({
+      funds: 0,
+      stocks: [{ name: 'TEST', price: 50, quantity: 10 }]
+    })
+  })
+
+  describe('sell all', () => {
+    beforeEach(async () => {
+      const sellAllPayload = { name: 'TEST', quantity: 10 }
+      await store.dispatch('sell-stock', sellAllPayload)
+    })
+
+    it('should remove sold one from user portfolio', () => {
+      expect(store.state.stocks).toHaveLength(0)
+    })
+
+    it('should add funds by sold amounts * price', () => {
+      expect(store.state.funds).toBe(500)
+    })
+  })
+
+  describe('sell some', () => {
+    beforeEach(async () => {
+      const sellSomePayload = { name: 'TEST', quantity: 1 }
+      await store.dispatch('sell-stock', sellSomePayload)
+    })
+
+    it('quantity should decrease', () => {
+      expect(store.state.stocks[0].quantity).toBe(9)
+    })
+
+    it('should add funds by sold amounts * price', () => {
+      expect(store.state.funds).toBe(50)
     })
   })
 })

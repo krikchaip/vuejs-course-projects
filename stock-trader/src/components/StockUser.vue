@@ -12,10 +12,12 @@
         placeholder="Quantity"
         type="number"
         min="1"
+        :max="quantity"
       />
       <button
         class="btn btn-outline-success"
-        :disabled="shouldDisable">
+        :disabled="shouldDisable"
+        @click="sellStock">
         Sell
       </button>
     </div>
@@ -47,6 +49,15 @@
         return !this.sellQuantityNotBlank
           || this.sellQuantityZeroOrNegative
           || !this.withinOwnedAmount
+      }
+    },
+    methods: {
+      async sellStock() {
+        await this.$store.dispatch('sell-stock', {
+          name: this.name,
+          quantity: Number(this.sellQuantity)
+        })
+        this.sellQuantity = null
       }
     }
   }

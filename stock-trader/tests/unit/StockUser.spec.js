@@ -33,23 +33,30 @@ describe('User Interface', () => {
 })
 
 describe('Sell Stock', () => {
-  describe('quantity field value', () => {
-    let wrapper, quantityField
+  let wrapper,
+      dispatch,
+      quantityField,
+      sellButton
 
-    beforeEach(() => {
-      wrapper = shallowMount(StockUser)
-      quantityField = wrapper.find('input[type="number"]')
-
-      wrapper.setProps({ name: 'TEST', price: 50, quantity: 10 })
+  beforeEach(() => {
+    dispatch = jest.fn(() => Promise.resolve())
+    wrapper = shallowMount(StockUser, {
+      mocks: { $store: { dispatch } }
     })
 
+    quantityField = wrapper.find('input[type="number"]')
+    sellButton = wrapper.find('button')
+
+    wrapper.setProps({ name: 'TEST', price: 50, quantity: 10 })
+  })
+
+  describe('quantity field value', () => {
     describe('empty', () => {
       beforeEach(() => {
         quantityField.setValue(null)
       })
 
       it('sell button should be disabled', () => {
-        const sellButton = wrapper.find('button')
         expect(sellButton.element.disabled).toBeTruthy()
       })
 
@@ -64,7 +71,6 @@ describe('Sell Stock', () => {
       })
 
       it('sell button should be disabled', () => {
-        const sellButton = wrapper.find('button')
         expect(sellButton.element.disabled).toBeTruthy()
       })
 
@@ -79,7 +85,6 @@ describe('Sell Stock', () => {
       })
 
       it('sell button should be disabled', () => {
-        const sellButton = wrapper.find('button')
         expect(sellButton.element.disabled).toBeTruthy()
       })
 
@@ -94,7 +99,6 @@ describe('Sell Stock', () => {
       })
 
       it('sell button should be clickable', () => {
-        const sellButton = wrapper.find('button')
         expect(sellButton.element.disabled).toBeFalsy()
       })
 
@@ -109,13 +113,32 @@ describe('Sell Stock', () => {
       })
 
       it('sell button should be disable', () => {
-        const sellButton = wrapper.find('button')
         expect(sellButton.element.disabled).toBeTruthy()
       })
 
       it('quantity input box should warn', () => {
         expect(quantityField.classes()).toContain('is-invalid')
       })
+    })
+  })
+
+  describe('when sell button clicked', () => {
+    beforeEach(async () => {
+      quantityField.setValue(1)
+      sellButton.trigger('click')
+
+      await wrapper.vm.$forceUpdate()
+    })
+
+    it('should dispatch sell-stock with name and quantity', () => {
+      expect(dispatch).toBeCalledWith(
+        'sell-stock',
+        { name: 'TEST', quantity: 1 }
+      )
+    })
+
+    it('quantity field should reset', () => {
+      expect(quantityField.element.value).toBeFalsy()
     })
   })
 })

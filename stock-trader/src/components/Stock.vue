@@ -12,6 +12,7 @@
         placeholder="Quantity"
         type="number"
         min="1"
+        :max="Math.floor(funds / price)"
       />
       <button
         class="btn btn-outline-success"
