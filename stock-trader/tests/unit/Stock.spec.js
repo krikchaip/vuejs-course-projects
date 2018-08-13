@@ -110,8 +110,7 @@ describe('Buy Stock', () => {
       const wrapper = createWrapper()
       const { numberInput, buyButton } = targetWrapper(wrapper)
 
-      numberInput.element.value = null
-      numberInput.trigger('input')
+      numberInput.setValue(null)
 
       expect(buyButton.element.disabled).toBeTruthy()
     })
@@ -120,12 +119,10 @@ describe('Buy Stock', () => {
       const wrapper = createWrapper()
       const { numberInput, buyButton } = targetWrapper(wrapper)
 
-      numberInput.element.value = 0
-      numberInput.trigger('input')
+      numberInput.setValue(0)
       expect(buyButton.element.disabled).toBeTruthy()
 
-      numberInput.element.value = -1
-      numberInput.trigger('input')
+      numberInput.setValue(-1)
       expect(buyButton.element.disabled).toBeTruthy()
     })
 
@@ -150,8 +147,7 @@ describe('Buy Stock', () => {
       const wrapper = createWrapper()
       const { numberInput } = targetWrapper(wrapper)
 
-      numberInput.element.value = null
-      numberInput.trigger('input')
+      numberInput.setValue(null)
 
       expect(numberInput.classes()).not.toContain('is-invalid')
     })
@@ -160,12 +156,10 @@ describe('Buy Stock', () => {
       const wrapper = createWrapper()
       const { numberInput } = targetWrapper(wrapper)
 
-      numberInput.element.value = 0
-      numberInput.trigger('input')
+      numberInput.setValue(0)
       expect(numberInput.classes()).toContain('is-invalid')
 
-      numberInput.element.value = -1
-      numberInput.trigger('input')
+      numberInput.setValue(-1)
       expect(numberInput.classes()).toContain('is-invalid')
     })
 

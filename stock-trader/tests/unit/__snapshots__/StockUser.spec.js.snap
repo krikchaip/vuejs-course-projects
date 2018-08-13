@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`User Interface given data containing name, price and quantity should display on top when passing as prop 1`] = `
+<div class="card-header py-2 text-white bg-info"><strong>BMD</strong>
+  <small> [ Price: 50, Quantity: 10 ]</small>
+</div>
+`;
