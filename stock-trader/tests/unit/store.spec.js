@@ -1,42 +1,16 @@
 import store from '@/store'
 
-const stateSpec = {
-  funds: 10000,
-  port: []
+function initialState() {
+  return { funds: 0, stocks: [] }
 }
 
-afterEach(() => {
-  store.replaceState(stateSpec)
+beforeEach(() => {
+  store.replaceState(initialState())
 })
 
-describe('State', () => {
-  // * GOOD - just remove existence checking
-  it('contains "funds" with 10000 as default', () => {
-    expect(store.state.funds).toBeDefined()
-    expect(store.state.funds).toBe(stateSpec.funds)
-  })
-
-  it('should contain an empty port', () => {
-    expect(store.state.port).toEqual([])
-  })
-})
-
-describe('Getters', () => {
-  describe('funds', () => {
-    // * GOOD - but you don't have to retest the real expected result
-    it('should throw an error when state.funds is not a Number', () => {
-      expect(() => {
-        store.replaceState({ funds: '13esa' })
-        store.getters.funds
-      }).toThrow()
-      expect(() => {
-        store.replaceState({ funds: 1000 })
-        store.getters.funds
-      }).not.toThrow()
-    })
-
-    // * GOOD
-    it('should return 3 digits thousands separator string', () => {
+describe('funds getter', () => {
+  describe('given state.funds is a number', () => {
+    it('should return 3-digit thousands separated string', () => {
       store.replaceState({ funds: 1000 })
       expect(store.getters.funds).toBe('1,000')
 
@@ -49,44 +23,61 @@ describe('Getters', () => {
   })
 })
 
-describe('Mutations', () => {
-  describe('WITHDRAW_FUNDS', () => {
-    it('should subtract funds with an amount', () => {
-      const funds = 1000
-      const amount = 500
+describe('make-payment action', () => {
+  it('should throw when passing negative amount', async () => {
+    await expect(store.dispatch('make-payment', -1))
+      .rejects.toBeDefined()
+  })
 
-      store.replaceState({ funds })
-      store.commit('WITHDRAW_FUNDS', amount)
+  it('should withdraw funds by some amount', async () => {
+    store.replaceState({ funds: 100 })
+    await store.dispatch('make-payment', 100)
 
-      expect(store.state.funds).toBe(500)
+    expect(store.state.funds).toBe(0)
+  })
+})
+
+describe('add-user-stock action', () => {
+  describe('payload validation', () => {
+    it('should reject when quantity < 1', async () => {
+      expect.assertions(2)
+      await expect(store.dispatch('add-user-stock', { quantity: 0 }))
+        .rejects.toBeDefined()
+      await expect(store.dispatch('add-user-stock', { quantity: -1 }))
+        .rejects.toBeDefined()
     })
   })
 
-  describe('ADD_STOCK', () => {
-    it('should add stock to user port', () => {
-      const boughtStock = { name: 'BUE', price: 30, quantity: 3 }
-      const currentPort = [
-        { name: 'ZZB', price: 90, quantity: 1 }
-      ]
+  describe('adding new stock', () => {
+    const orderPayload = {
+      name: 'MBD',
+      price: 30,
+      quantity: 5
+    }
 
-      store.replaceState({ port: currentPort })
-      store.commit('ADD_STOCK', boughtStock)
+    it('should exist in user portfolio', async () => {
+      expect.assertions(1)
 
-      expect(store.state.port).toContainEqual(boughtStock)
+      await store.dispatch('add-user-stock', orderPayload)
+      expect(store.state.stocks).toContainEqual(orderPayload)
     })
+  })
 
-    it('should increment quantity instead if stock already existed', () => {
-      const currentPort = [
-        { name: 'ZZB', price: 90, quantity: 1 }
-      ]
-      const boughtStock = currentPort[0]
+  describe('buy more existing stock', () => {
+    describe('given stock already exists in user portfolio', () => {
+      const stock = {
+        name: 'MBD',
+        price: 30,
+        quantity: 5
+      }
 
-      store.replaceState({ port: currentPort })
-      store.commit('ADD_STOCK', boughtStock)
+      beforeEach(() => {
+        store.replaceState({ stocks: [stock] })
+      })
 
-      expect(store.state.port).toContainEqual({
-        ...boughtStock,
-        quantity: 2
+      it('should increment quantity instead of creating new one', () => {
+        store.dispatch('add-user-stock', stock)
+        expect(store.state.stocks[0]).toHaveProperty('quantity', 10)
       })
     })
   })

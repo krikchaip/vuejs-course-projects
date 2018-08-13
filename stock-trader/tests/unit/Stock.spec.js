@@ -45,15 +45,19 @@ describe('Buy Stock', () => {
     const stockData = { name: 'BMX', price: 50 }
     const orderQuantity = 10
 
-    let wrapper, addUserStock
+    let wrapper, addUserStock, makePayment
 
     beforeEach(() => {
       addUserStock = jest.fn(() => Promise.resolve())
+      makePayment = jest.fn(() => Promise.resolve())
       wrapper = createWrapper({
         data: () => ({ quantity: orderQuantity }),
         propsData: stockData,
         state: { funds },
-        actions: { 'add-user-stock': addUserStock }
+        actions: {
+          'add-user-stock': addUserStock,
+          'make-payment': makePayment
+        }
       })
     })
 
@@ -67,11 +71,23 @@ describe('Buy Stock', () => {
       expect(numberInput.classes()).not.toContain('is-invalid')
     })
 
-    it('should dispatch add-user-stock with order payload', () => {
+    it('should dispatch make-payment with some amount of funds', async () => {
+      const amount = stockData.price * orderQuantity
+      const { buyButton } = targetWrapper(wrapper)
+
+      buyButton.trigger('click')
+      await wrapper.vm.$forceUpdate()
+
+      expect(makePayment.mock.calls[0][1]).toBe(amount)
+    })
+
+    it('should dispatch add-user-stock with order payload', async () => {
       const order = { ...stockData, quantity: orderQuantity }
       const { buyButton } = targetWrapper(wrapper)
 
       buyButton.trigger('click')
+      await wrapper.vm.$forceUpdate()
+
       expect(addUserStock.mock.calls[0]).toContainEqual(order)
     })
 
@@ -79,6 +95,10 @@ describe('Buy Stock', () => {
       const { numberInput, buyButton } = targetWrapper(wrapper)
 
       buyButton.trigger('click')
+
+      // because we don't know when the triggered method has finished
+      // thus we try waiting for some random cycles
+      await wrapper.vm.$forceUpdate()
       await wrapper.vm.$forceUpdate()
 
       expect(numberInput.element.value).toBeFalsy()

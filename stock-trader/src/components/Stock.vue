@@ -37,9 +37,10 @@
     computed: {
       ...mapState(['funds']),
 
+      payAmount() { return this.quantity * this.price },
       quantityIsBlank() { return typeof this.quantity !== 'number' && !this.quantity },
       quantityIsLessThanOne() { return this.quantity < 1 },
-      notEnoughFunds() { return this.funds < this.quantity * this.price },
+      notEnoughFunds() { return this.funds < this.payAmount },
 
       disableConditions() {
         return this.quantityIsBlank
@@ -54,14 +55,14 @@
       }
     },
     methods: {
-      buyStock() {
-        this.$store.dispatch('add-user-stock', {
+      async buyStock() {
+        await this.$store.dispatch('make-payment', this.payAmount)
+        await this.$store.dispatch('add-user-stock', {
           name: this.name,
           price: this.price,
           quantity: this.quantity
-        }).then(() => {
-          this.quantity = null
         })
+        this.quantity = null
       }
     }
   }
