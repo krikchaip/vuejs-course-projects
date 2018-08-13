@@ -42,7 +42,7 @@ describe('given stocks data prepared', () => {
 
   wrapper.setData({ stocksData })
 
-  it('should render all corresponding data', () => {
+  it('each stock should receive its data', () => {
     const Stock = wrapper.findAll({ name: 'Stock' })
     const StockProps = Stock.wrappers.map(s => s.props())
 
