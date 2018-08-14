@@ -1,7 +1,14 @@
 import store from '@/store'
 
 function initialState() {
-  return { funds: 0, stocks: [] }
+  return {
+    funds: 0,
+    stocks: [],
+    stocksData: [
+      { name: 'BMW', price: 100 },
+      { name: 'Google', price: 200 }
+    ]
+  }
 }
 
 afterEach(() => {
@@ -118,6 +125,43 @@ describe('sell-stock action', () => {
 
     it('should add funds by sold amounts * price', () => {
       expect(store.state.funds).toBe(50)
+    })
+  })
+})
+
+describe('end-day action', () => {
+  it('should change each stock data price', async () => {
+    const oldPrices = store.state.stocksData.map(s => s.price)
+
+    await store.dispatch('end-day')
+
+    const newPrices = store.state.stocksData.map(s => s.price)
+    expect(newPrices).toEqual(expect.not.arrayContaining(oldPrices))
+  })
+
+  describe('given user has bought a stock', () => {
+    beforeEach(() => {
+      store.replaceState({
+        stocks: [{ name: 'BMW', price: 100, quantity: 1 }],
+        stocksData: [{ name: 'BMW', price: 100 }]
+      })
+
+      jest.spyOn(Math, 'random')
+      Math.random.mockReturnValue(1)
+    })
+
+    afterEach(() => {
+      Math.random.mockRestore()
+    })
+
+    it('should also update user\'s stocks prices', async () => {
+      // price should change to specific value everytime
+      await store.dispatch('end-day')
+
+      const { price } = store.state.stocks[0]
+      const { price: newPrice } = store.state.stocksData[0]
+
+      expect(price).toBe(newPrice)
     })
   })
 })

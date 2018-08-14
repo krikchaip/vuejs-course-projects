@@ -3,6 +3,9 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
+const randomSign = () => Math.random() < 0.5 ? -1 : 1
+const randomRange = (a, b) => Math.round(Math.random() * b) + a
+
 export default new Vuex.Store({
   state: {
     funds: 10000,
@@ -44,6 +47,17 @@ export default new Vuex.Store({
     REMOVE_STOCK(state, name) {
       const target = state.stocks.findIndex(s => s.name === name)
       state.stocks.splice(target, 1)
+    },
+    RANDOM_DATA_PRICE(state, modifier) {
+      state.stocksData.forEach(s => {
+        const maxRange = Math.round(s.price * modifier)
+        s.price += randomSign() * randomRange(0, maxRange)
+      })
+    },
+    UPDATE_PRICE(state) {
+      state.stocks.forEach(s => {
+        s.price = state.stocksData.filter(sd => sd.name === s.name)[0].price
+      })
     }
   },
   actions: {
@@ -70,6 +84,10 @@ export default new Vuex.Store({
       if(getters.stockIsEmpty(data.name)) {
         commit('REMOVE_STOCK', data.name)
       }
+    },
+    async 'end-day'({ getters, commit }) {
+      commit('RANDOM_DATA_PRICE', 0.05)
+      commit('UPDATE_PRICE')
     }
   }
 })
