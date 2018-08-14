@@ -6,7 +6,9 @@
         <ActionSaveLoad/>
       </div>
     </Navigation>
-    <router-view></router-view>
+    <transition name="slide-fade" mode="out-in">
+      <router-view/>
+    </transition>
   </div>
 </template>
 
@@ -25,5 +27,18 @@
 
   * {
     user-select: none;
+  }
+
+  .slide-fade-enter-active {
+    transition: all 0.2s ease-out;
+  }
+
+  .slide-fade-leave-active {
+    transition: all 0.2s ease-out;
+  }
+
+  .slide-fade-enter, .slide-fade-leave-to {
+    transform: translateY(10px);
+    opacity: 0;
   }
 </style>
