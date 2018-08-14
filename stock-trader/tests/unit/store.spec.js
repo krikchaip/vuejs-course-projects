@@ -2,11 +2,13 @@ import store from '@/store'
 
 function initialState() {
   return {
-    funds: 0,
+    funds: 10000,
     stocks: [],
     stocksData: [
       { name: 'BMW', price: 100 },
-      { name: 'Google', price: 200 }
+      { name: 'Google', price: 200 },
+      { name: 'Apple', price: 250 },
+      { name: 'Twitter', price: 50 }
     ]
   }
 }
@@ -162,6 +164,49 @@ describe('end-day action', () => {
       const { price: newPrice } = store.state.stocksData[0]
 
       expect(price).toBe(newPrice)
+    })
+  })
+})
+
+describe('restore-data action', () => {
+  describe('given incoming state data', () => {
+    const incomingData = {
+      funds: 99,
+      stocks: [{ name: 'Google', price: 299, quantity: 1 }],
+      stocksData: [
+        { name: 'BMW', price: 10 },
+        { name: 'Google', price: 299 }
+      ]
+    }
+
+    beforeEach(async () => {
+      await store.dispatch('restore-data', incomingData)
+    })
+
+    it('state should restored', () => {
+      expect(store.state).toMatchObject(incomingData)
+    })
+  })
+
+  describe('incomplete data', () => {
+    describe('funds damaged', () => {
+      it('should repair with 10000', () => {
+        store.dispatch('restore-data', { funds: null })
+        expect(store.state.funds).toBe(10000)
+
+        store.dispatch('restore-data', { funds: undefined })
+        expect(store.state.funds).toBe(10000)
+      })
+    })
+
+    describe('stocks damaged', () => {
+      it('should repair with []', () => {
+        store.dispatch('restore-data', { stocks: null })
+        expect(store.state.stocks).toEqual([])
+
+        store.dispatch('restore-data', { stocks: undefined })
+        expect(store.state.stocks).toEqual([])
+      })
     })
   })
 })
