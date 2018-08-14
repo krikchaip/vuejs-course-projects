@@ -10,26 +10,14 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
   import Stock from '@/components/Stock'
 
   export default {
     name: 'Stocks',
     components: { Stock },
-    data: () => ({
-      stocksData: null
-    }),
-    async created() {
-      this.stocksData = await this.fetchStocksData()
-    },
-    methods: {
-      async fetchStocksData() {
-        return [
-          { name: 'BMW', price: 100 },
-          { name: 'Google', price: 200 },
-          { name: 'Apple', price: 250 },
-          { name: 'Twitter', price: 50 }
-        ]
-      }
+    computed: {
+      ...mapState(['stocksData'])
     }
   }
 </script>

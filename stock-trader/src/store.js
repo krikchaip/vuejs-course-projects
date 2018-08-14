@@ -6,7 +6,13 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     funds: 10000,
-    stocks: []
+    stocks: [],
+    stocksData: [
+      { name: 'BMW', price: 100 },
+      { name: 'Google', price: 200 },
+      { name: 'Apple', price: 250 },
+      { name: 'Twitter', price: 50 }
+    ]
   },
   getters: {
     funds: ({ funds }) => funds.toLocaleString('en-US'),
