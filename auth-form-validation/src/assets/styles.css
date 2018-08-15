@@ -32,3 +32,41 @@ body {
 .navigation__group > .router-link-active {
   color: #fa923f;
 }
+
+.view-container {
+  display: flex;
+  justify-content: center;
+  padding-top: 1.4rem;
+}
+
+.home {
+  text-align: center;
+}
+.home__heading {
+  font-size: 2rem;
+  font-weight: bold;
+}
+.home__text {
+  padding: 1.4rem 0;
+}
+.home__actions {
+  display: flex;
+  justify-content: center;
+}
+.home__btn {
+  margin: 0 10px;
+}
+
+.btn {
+  border-radius: 3px;
+  border: 1px solid #521751;
+  color: #521751;
+  display: inline-block;
+  padding: 10px 0;
+  text-decoration: none;
+  width: 100px;
+}
+.btn:active {
+  background-color: #521751;
+  color: white;
+}

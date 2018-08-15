@@ -5,6 +5,9 @@
       <router-link to="/signin">Sign In</router-link>
       <router-link to="/dashboard">Dashboard</router-link>
     </Navigation>
+    <div class="view-container">
+      <router-view/>
+    </div>
   </div>
 </template>
 
@@ -15,7 +18,6 @@
     components: { Navigation }
   }
 </script>
-
 
 <style>
   @import '~@/assets/styles.css';
