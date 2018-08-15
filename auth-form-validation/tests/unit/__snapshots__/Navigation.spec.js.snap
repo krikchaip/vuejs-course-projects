@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`default slot links should render inside their group 1`] = `
+<div class="navigation__group">
+  <link>
+  <link>
+  <link>
+</div>
+`;
