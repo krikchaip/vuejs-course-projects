@@ -3,12 +3,32 @@
 }
 
 body {
-  margin: 0;
   font-family: "Helvetica Neue", Helvetica;
+  margin: 0;
+  user-select: none;
 }
 
-.navigation {}
-.navigation__brand {}
-.navigation__group {}
-.navigation__group > * {}
-.navigation__group > .router-link-active {}
+.navigation {
+  background-color: #521751;
+  display: flex;
+  padding: 1.2rem;
+}
+.navigation__brand {
+  color: white;
+  display: inline-block;
+  font-weight: bold;
+  margin-right: auto;
+  text-decoration: none;
+}
+.navigation__group {
+  display: inline-block;
+}
+.navigation__group > * {
+  color: white;
+  display: inline-block;
+  margin-left: 1.4rem;
+  text-decoration: none;
+}
+.navigation__group > .router-link-active {
+  color: #fa923f;
+}
