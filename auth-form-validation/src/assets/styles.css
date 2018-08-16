@@ -39,21 +39,21 @@ body {
   padding-top: 1.4rem;
 }
 
-.home {
+.jumbo {
   text-align: center;
 }
-.home__heading {
+.jumbo__heading {
   font-size: 2rem;
   font-weight: bold;
 }
-.home__text {
+.jumbo__text {
   padding: 1.4rem 0;
 }
-.home__actions {
+.jumbo__actions {
   display: flex;
   justify-content: center;
 }
-.home__btn {
+.jumbo__btn {
   margin: 0 10px;
 }
 
