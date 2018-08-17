@@ -35,6 +35,7 @@
 
 <script>
   import { omit } from 'ramda'
+  import firebase from 'lib/firebase'
 
   export default {
     data: () => ({
@@ -46,13 +47,22 @@
       accept: false
     }),
     computed: {
-      userData() { return omit(['cpassword', 'accept'], this.$data) }
+      userData() { return omit(['password', 'cpassword', 'accept'], this.$data) }
     },
     methods: {
-      onSubmit() {
+      async onSubmit() {
         // call firebase.emailPasswordSignUp with userData
-        // resolve idToken, refreshToken, expiresIn, localId
+        // resolve idToken, localId
+        const { idToken, localId } = await firebase.emailPasswordSignUp(
+          this.email,
+          this.password
+        )
+
         // save userData to db immediately without a password
+        await firebase.addUserRecord(
+          { UID: localId, ...this.userData },
+          idToken
+        )
       }
     }
   }
