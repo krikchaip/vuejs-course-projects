@@ -1,4 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
+// @ts-ignore
 import Navigation from '@/components/Navigation'
 
 describe('default slot', () => {
@@ -8,7 +9,8 @@ describe('default slot', () => {
       wrapper = shallowMount(Navigation, {
         slots: {
           default: ['<link/>', '<link/>', '<link/>']
-        }
+        },
+        stubs: ['router-link']
       })
     })
 
