@@ -42,6 +42,35 @@ describe('emailPasswordSignUp', () => {
   })
 })
 
+describe('emailPasswordSignIn', () => {
+  it('reject APIKeyError when no API_KEY provided', async () => {
+    delete process.env.VUE_APP_FIREBASE_API_KEY
+    await expect(firebase.emailPasswordSignIn('winner', '123456'))
+      .rejects.toBeInstanceOf(APIKeyError)
+  })
+
+  describe('with API_KEY', () => {
+    beforeEach(async () => {
+      process.env.VUE_APP_FIREBASE_API_KEY = 'something_secret'
+      await firebase.emailPasswordSignIn('winner', '123456')
+    })
+
+    it('make post request to the API endpoint', () => {
+      // @ts-ignore
+      expect(axios.post.mock.calls[0][0]).toMatchSnapshot()
+    })
+
+    it('payload data contain email, password and returnSecureToken', () => {
+      // @ts-ignore
+      expect(axios.post.mock.calls[0][1]).toMatchObject({
+        email: 'winner',
+        password: '123456',
+        returnSecureToken: true
+      })
+    })
+  })
+})
+
 describe('addUserRecord', () => {
   const userData = {
     UID: 'SeCrEt1234',

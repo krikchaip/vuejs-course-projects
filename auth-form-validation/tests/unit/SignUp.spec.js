@@ -9,8 +9,8 @@ describe('form has been filled up', () => {
       data: () => ({
         email: 'test@test.com',
         age: 10,
-        password: '1234',
-        cpassword: '1234',
+        password: '123456',
+        cpassword: '123456',
         country: 'USA',
         accept: true
       })

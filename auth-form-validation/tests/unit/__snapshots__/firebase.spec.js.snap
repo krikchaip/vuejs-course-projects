@@ -2,4 +2,6 @@
 
 exports[`addUserRecord with DB_URL make put request to /users/[UID].json?auth=[ID_TOKEN] 1`] = `"[URL_TO_FIREBASE_REALTIME_DB]/users/SeCrEt1234.json?auth=auth_token_for_realtime_db"`;
 
+exports[`emailPasswordSignIn with API_KEY make post request to the API endpoint 1`] = `"https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=something_secret"`;
+
 exports[`emailPasswordSignUp with API_KEY make post request to the API endpoint 1`] = `"https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=something_secret"`;

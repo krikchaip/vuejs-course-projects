@@ -65,6 +65,18 @@ export async function emailPasswordSignUp(email, password) {
 }
 
 /**
+* see firebase [documentation](https://goo.gl/DHfXKw) for return value
+* @param {String} email
+* @param {String} password
+*/
+export async function emailPasswordSignIn(email, password) {
+  return axios.post(
+    toEndpoint('verifyPassword', getFirebaseAPIKey()),
+    { email, password, returnSecureToken: true }
+  )
+}
+
+/**
  * @typedef UserData
  * @type {{ [a: string]: any, UID: String, email: String }}
  */
@@ -83,5 +95,6 @@ export async function addUserRecord(userData, ID_TOKEN) {
 
 export default {
   emailPasswordSignUp,
+  emailPasswordSignIn,
   addUserRecord
 }
