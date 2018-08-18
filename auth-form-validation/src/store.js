@@ -3,12 +3,17 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
+export const initialState = () => ({
+  data: null,
+  idToken: null,
+  refreshToken: null,
+  expiresIn: 0
+})
+
 export default new Vuex.Store({
-  state: {
-    data: null,
-    idToken: null,
-    refreshToken: null,
-    expiresIn: 0
+  state: initialState(),
+  getters: {
+    isAuthenticated(state) { return !!state.idToken }
   },
   mutations: {
     SET_DATA(state, newData) { state.data = newData },

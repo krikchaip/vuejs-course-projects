@@ -1,12 +1,7 @@
-import store from '@/store'
+import store, { initialState } from '@/store'
 
 afterEach(() => {
-  store.replaceState({
-    data: null,
-    idToken: null,
-    refreshToken: null,
-    expiresIn: 0
-  })
+  store.replaceState(initialState())
 })
 
 describe('save-user-data', () => {

@@ -1,6 +1,8 @@
+// @ts-nocheck
 import Vue from 'vue'
 import Router from 'vue-router'
 
+import store from '@/store'
 import Home from '@/views/Home'
 import SignUp from '@/views/SignUp'
 import SignIn from '@/views/SignIn'
@@ -28,7 +30,14 @@ export default new Router({
     {
       path: '/dashboard',
       name: 'dashboard',
-      component: Dashboard
+      component: Dashboard,
+      beforeEnter(to, from, next) {
+        if(store.getters.isAuthenticated) {
+          next()
+        } else {
+          next('/signin')
+        }
+      }
     }
   ]
 })
