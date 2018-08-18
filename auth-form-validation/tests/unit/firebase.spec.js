@@ -101,3 +101,26 @@ describe('addUserRecord', () => {
     })
   })
 })
+
+describe('getUserRecord', () => {
+  const UID = 'win_ner_za_kub'
+  const ID_TOKEN = 'auth_token_for_realtime_db'
+
+  it('reject TargetDBError when no DB_URL provided', async () => {
+    delete process.env.VUE_APP_FIREBASE_DB_URL
+    await expect(firebase.getUserRecord(UID, ID_TOKEN))
+      .rejects.toBeInstanceOf(TargetDBError)
+  })
+
+  describe('with DB_URL', () => {
+    beforeEach(async () => {
+      process.env.VUE_APP_FIREBASE_DB_URL = '[URL_TO_FIREBASE_REALTIME_DB]'
+      await firebase.getUserRecord(UID, ID_TOKEN)
+    })
+
+    it('make get request to /users/[UID].json?auth=[ID_TOKEN]', () => {
+      // @ts-ignore
+      expect(axios.get.mock.calls[0][0]).toMatchSnapshot()
+    })
+  })
+})

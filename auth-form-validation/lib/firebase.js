@@ -93,8 +93,17 @@ export async function addUserRecord(userData, ID_TOKEN) {
   )
 }
 
+/**
+ * @param {String} uid Firebase user UID
+ * @param {String} ID_TOKEN Authenticate request token
+ */
+export async function getUserRecord(uid, ID_TOKEN) {
+  return axios.get(toRecordURL(uid, ID_TOKEN))
+}
+
 export default {
   emailPasswordSignUp,
   emailPasswordSignIn,
-  addUserRecord
+  addUserRecord,
+  getUserRecord
 }
