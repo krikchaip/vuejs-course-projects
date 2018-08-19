@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import router from '@/router'
 
 Vue.use(Vuex)
 
@@ -19,7 +20,11 @@ export default new Vuex.Store({
     SET_DATA(state, newData) { state.data = newData },
     SET_ID_TOKEN(state, token) { state.idToken = token },
     SET_REFRESH_TOKEN(state, token) { state.refreshToken = token },
-    SET_EXPIRES(state, n) { state.expiresIn = Date.now() + Number(n) }
+    SET_EXPIRES(state, n) { state.expiresIn = Date.now() + Number(n) },
+    RESET_STATE(state) {
+      const reset = initialState()
+      Object.keys(state).forEach(k => state[k] = reset[k])
+    }
   },
   actions: {
     async 'save-user-data'({ commit }, payload) {
@@ -29,6 +34,10 @@ export default new Vuex.Store({
       commit('SET_ID_TOKEN', payload.idToken)
       commit('SET_REFRESH_TOKEN', payload.refreshToken)
       commit('SET_EXPIRES', payload.expiresIn)
+    },
+    async 'logout-user'({ commit }) {
+      commit('RESET_STATE')
+      router.push('/')
     }
   }
 })

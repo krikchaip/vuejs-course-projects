@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Nav links state show dashboard, logout button when logged in 1`] = `
+<navigation-stub>
+  <a>Dashboard</a>
+  <button>Logout</button>
+</navigation-stub>
+`;

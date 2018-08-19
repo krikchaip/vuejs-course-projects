@@ -29,7 +29,16 @@ body {
   margin-left: 1.4rem;
   text-decoration: none;
 }
-.navigation__group > .router-link-active {
+.navigation__group > button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  outline: none;
+  padding: 0;
+}
+.navigation__group > .router-link-active,
+.navigation__group > button:active {
   color: #fa923f;
 }
 

@@ -47,6 +47,9 @@
 
         await this.$store.dispatch('save-user-data', data)
         await this.$store.dispatch('save-token-data', tokenData)
+
+        // redirect to /dashboard after login completed
+        this.$router.push('/dashboard')
       }
     }
   }
