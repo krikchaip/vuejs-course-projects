@@ -1,5 +1,5 @@
 import _ from 'ramda'
-import axios, { AxiosResponse } from 'axios'
+import axios from 'axios'
 import { APIKeyError, TargetDBError } from 'lib/errors'
 
 axios.interceptors.response.use(
@@ -84,7 +84,7 @@ export async function emailPasswordSignIn(email, password) {
 /**
  * @param {UserData} userData
  * @param {String} ID_TOKEN Authenticate request token
- * @return {Promise<AxiosResponse<UserData>>} the data we wrote to the database
+ * @return the data we wrote to the database (without UID)
  */
 export async function addUserRecord(userData, ID_TOKEN) {
   return axios.put(
