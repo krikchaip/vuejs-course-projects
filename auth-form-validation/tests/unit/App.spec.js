@@ -19,6 +19,7 @@ describe('Nav links state', () => {
         'router-link': RouterLinkStub,
         'router-view': true
       },
+      methods: { _created() {} },
       mocks: {
         $store: {
           getters: {

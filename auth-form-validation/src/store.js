@@ -15,13 +15,19 @@ export const initialState = () => ({
 export default new Vuex.Store({
   state: initialState(),
   getters: {
-    isAuthenticated(state) { return !!state.idToken }
+    isAuthenticated(state) { return !!state.idToken },
+    validateCredentials(state) {
+      return !!state.idToken
+        && !!state.data.uid
+        && state.expiresIn > Date.now()
+    }
   },
   mutations: {
     SET_DATA(state, newData) { state.data = newData },
     SET_ID_TOKEN(state, token) { state.idToken = token },
     SET_REFRESH_TOKEN(state, token) { state.refreshToken = token },
     SET_EXPIRES(state, n) { state.expiresIn = Date.now() + Number(n) * 1000 },
+    SET_EXPIRES_EXACT(state, n) { state.expiresIn = n },
     SET_LOGOUT_TIMER(state, n) { state.logoutTimer = n },
     RESET_STATE(state) {
       const reset = initialState()
@@ -38,11 +44,18 @@ export default new Vuex.Store({
       commit('SET_EXPIRES', payload.expiresIn)
     },
     async 'save-user-session'({ state }) {
+      localStorage.setItem('uid', state.data.uid)
       localStorage.setItem('idToken', state.idToken)
       localStorage.setItem('expiresIn', String(state.expiresIn))
     },
+    async 'load-user-session'({ commit }) {
+      commit('SET_DATA', { uid: localStorage.getItem('uid') })
+      commit('SET_ID_TOKEN', localStorage.getItem('idToken'))
+      commit('SET_EXPIRES_EXACT', Number(localStorage.getItem('expiresIn')))
+    },
     async 'logout-user'({ state, commit }) {
       clearTimeout(state.logoutTimer)
+      localStorage.clear()
       commit('RESET_STATE')
       router.push('/')
     },
@@ -64,7 +77,9 @@ export default new Vuex.Store({
         return dispatch('logout-user')
       }
     },
-    async 'auto-login-user'() {
+    async 'load-user-credentials'({ dispatch, getters }) {
+      await dispatch('load-user-session')
+      return getters.validateCredentials
     }
   }
 })

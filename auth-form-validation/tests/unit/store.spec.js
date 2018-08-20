@@ -1,5 +1,8 @@
 import store, { initialState } from '@/store'
 import router from '@/router'
+import firebase from 'lib/firebase'
+
+jest.mock('lib/firebase')
 
 afterEach(() => {
   store.replaceState(initialState())
@@ -66,6 +69,11 @@ describe('logout-user', () => {
         expiresIn: 3600,
         logoutTimer: 11
       })
+
+      localStorage.setItem('idToken', 'ID_TOKEN')
+      localStorage.setItem('expiresIn', '3600')
+      localStorage.setItem('uid', 'NOTHING')
+
       router.push('/dashboard')
 
       jest.spyOn(window, 'clearTimeout')
@@ -74,8 +82,18 @@ describe('logout-user', () => {
       await store.dispatch('logout-user')
     })
 
+    afterEach(() => {
+      localStorage.clear()
+    })
+
     it('should clear logout timer', () => {
       expect(clearTimeout).toBeCalledWith(11)
+    })
+
+    it('should clear user credentials', () => {
+      expect(localStorage.getItem('idToken')).toBe(null)
+      expect(localStorage.getItem('expiresIn')).toBe(null)
+      expect(localStorage.getItem('uid')).toBe(null)
     })
 
     it('should reset all state to its default', () => {
@@ -161,6 +179,7 @@ describe('save-user-session', () => {
     beforeEach(() => {
       store.replaceState({
         ...initialState(),
+        data: { uid: 'USER_UID_1234' },
         idToken: 'SOME_TOKEN',
         expiresIn: 100000
       })
@@ -178,6 +197,64 @@ describe('save-user-session', () => {
     it('expiresIn should exist in localStorage', async () => {
       await store.dispatch('save-user-session')
       expect(localStorage.getItem('expiresIn')).toBe('100000')
+    })
+
+    it('uid should exist in localStorage', async () => {
+      await store.dispatch('save-user-session')
+      expect(localStorage.getItem('uid')).toBe('USER_UID_1234')
+    })
+  })
+})
+
+describe('load-user-credentials', () => {
+  beforeEach(() => {
+    router.replace('/')
+  })
+
+  it('resolve false when no user credentials exist', async () => {
+    localStorage.clear()
+    await expect(store.dispatch('load-user-credentials')).resolves.toBe(false)
+  })
+
+  describe('user credentials exist in local storage', () => {
+    beforeEach(() => {
+      localStorage.setItem('idToken', 'USER_ID_TOKEN')
+      localStorage.setItem('expiresIn', '50000')
+      localStorage.setItem('uid', 'USER_UID')
+    })
+
+    afterEach(() => {
+      localStorage.clear()
+    })
+
+    it('load credentials to vuex store', async () => {
+      await store.dispatch('load-user-credentials')
+
+      expect(store.state.idToken).toBe('USER_ID_TOKEN')
+      expect(store.state.expiresIn).toBe(50000)
+      expect(store.state.data.uid).toBe('USER_UID')
+    })
+
+    describe('token status', () => {
+      describe('expired', () => {
+        beforeEach(() => {
+          jest.spyOn(Date, 'now').mockImplementation(() => 100000)
+        })
+
+        it('resolve false', async () => {
+          await expect(store.dispatch('load-user-credentials')).resolves.toBe(false)
+        })
+      })
+
+      describe('still active', () => {
+        beforeEach(() => {
+          jest.spyOn(Date, 'now').mockImplementation(() => 1000)
+        })
+
+        it('resolve true', async () => {
+          await expect(store.dispatch('load-user-credentials')).resolves.toBe(true)
+        })
+      })
     })
   })
 })
