@@ -59,17 +59,23 @@ describe('save-token-data', () => {
 describe('logout-user', () => {
   describe('given user logged in', () => {
     beforeEach(async () => {
-      const TIME_STAMP = 1000
-
       store.replaceState({
-        data: { email: 'test@test.com', age: 10 },
+        ...initialState(),
         idToken: 'ID_TOKEN',
         refreshToken: 'REFRESH_ID_TOKEN',
-        expiresIn: TIME_STAMP + 3600
+        expiresIn: 3600,
+        logoutTimer: 11
       })
       router.push('/dashboard')
 
+      jest.spyOn(window, 'clearTimeout')
+        .mockImplementation(() => true)
+
       await store.dispatch('logout-user')
+    })
+
+    it('should clear logout timer', () => {
+      expect(clearTimeout).toBeCalledWith(11)
     })
 
     it('should reset all state to its default', () => {
@@ -86,7 +92,7 @@ describe('auto-logout-user', () => {
   describe('given user logged in', () => {
     beforeEach(() => {
       store.replaceState({
-        data: { email: 'test@test.com', age: 10 },
+        ...initialState(),
         idToken: 'ID_TOKEN',
         refreshToken: 'REFRESH_ID_TOKEN',
         expiresIn: 10000
@@ -105,15 +111,24 @@ describe('auto-logout-user', () => {
       beforeEach(() => {
         // @ts-ignore
         Date.now.mockImplementation(() => 1000)
-        store.dispatch('auto-logout-user')
       })
 
       it('should set timeout to remaining times', () => {
+        store.dispatch('auto-logout-user')
         expect(setTimeout).toBeCalledWith(expect.any(Function), 9000)
+      })
+
+      it('should save timeout number to state', () => {
+        // @ts-ignore
+        setTimeout.mockImplementation(() => 10)
+        store.dispatch('auto-logout-user')
+
+        expect(store.state.logoutTimer).toBe(10)
       })
 
       describe('as time passed', () => {
         beforeEach(() => {
+          store.dispatch('auto-logout-user')
           jest.advanceTimersByTime(9000)
         })
 
@@ -137,6 +152,32 @@ describe('auto-logout-user', () => {
       it('log user out immediately', () => {
         expect(store.state).toMatchObject(initialState())
       })
+    })
+  })
+})
+
+describe('save-user-session', () => {
+  describe('given session', () => {
+    beforeEach(() => {
+      store.replaceState({
+        ...initialState(),
+        idToken: 'SOME_TOKEN',
+        expiresIn: 100000
+      })
+    })
+
+    afterEach(() => {
+      localStorage.clear()
+    })
+
+    it('idToken should exist in localStorage', async () => {
+      await store.dispatch('save-user-session')
+      expect(localStorage.getItem('idToken')).toBe('SOME_TOKEN')
+    })
+
+    it('expiresIn should exist in localStorage', async () => {
+      await store.dispatch('save-user-session')
+      expect(localStorage.getItem('expiresIn')).toBe('100000')
     })
   })
 })

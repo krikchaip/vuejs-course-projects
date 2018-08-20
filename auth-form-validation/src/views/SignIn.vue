@@ -39,6 +39,7 @@
         data.uid = localId
 
         // save user data to vuex store alongside with token data
+        // also save user session
         const tokenData = {
           idToken,
           refreshToken,
@@ -47,9 +48,10 @@
 
         await this.$store.dispatch('save-user-data', data)
         await this.$store.dispatch('save-token-data', tokenData)
+        await this.$store.dispatch('save-user-session')
 
-        // auto logout when user idToken expires
-        await this.$store.dispatch('auto-logout-user')
+        // set logout watcher when user idToken expires
+        this.$store.dispatch('auto-logout-user')
 
         // redirect to /dashboard after login completed
         this.$router.push('/dashboard')

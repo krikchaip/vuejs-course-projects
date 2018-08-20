@@ -1,4 +1,5 @@
 module.exports = {
+  "setupFiles": ["./lib/browser.js"],
   moduleFileExtensions: [
     'js',
     'jsx',
